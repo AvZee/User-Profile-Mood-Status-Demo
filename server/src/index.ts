@@ -11,7 +11,7 @@ app.use(
     cors({
         origin: [
             "http://localhost:5173",
-            "https://user-profile-mood-status-demo-oemf.vercel.app/",
+            "https://user-profile-mood-status-demo-oemf.vercel.app",
         ],
         allowMethods: ["GET", "PATCH", "OPTIONS"],
         allowHeaders: ["Content-Type"],
