@@ -10,6 +10,11 @@ A full-stack demo of a user profile with an interactive mood status.
 - PostgreSQL
 - Zod validation
 
+## Live Demo
+
+- Frontend: https://user-profile-mood-status-demo.vercel.app/
+- Backend API: https://user-profile-mood-status-demo-production.up.railway.app/api/profile/current
+
 ## Features
 
 - Update user mood and emoji
