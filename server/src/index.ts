@@ -5,7 +5,7 @@ import profileRoutes from "./routes/profileRoutes";
 import logger from "./logger";
 
 const app = new Hono();
-const port = Number(process.env.PORT) || 3000;
+const port = Number(process.env.PORT|| 3000);
 
 app.use(
     "/api/*",
