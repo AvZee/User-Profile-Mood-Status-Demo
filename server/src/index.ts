@@ -5,6 +5,7 @@ import profileRoutes from "./routes/profileRoutes";
 import logger from "./logger";
 
 const app = new Hono();
+const port = Number(process.env.PORT) || 3000;
 
 app.use(
     "/api/*",
@@ -24,7 +25,7 @@ app.route("/api/profile", profileRoutes);
 
 Bun.serve({
     fetch: app.fetch,
-    port: 3000,
+    port,
 });
 
-logger.info("Server running on http://localhost:3000");
+logger.info(`Server running on port ${port}`);
