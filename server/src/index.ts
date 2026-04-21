@@ -9,7 +9,10 @@ const app = new Hono();
 app.use(
     "/api/*",
     cors({
-        origin: ["http://localhost:5173"],
+        origin: [
+            "http://localhost:5173",
+            "https://user-profile-mood-status-demo-oemf.vercel.app/",
+        ],
         allowMethods: ["GET", "PATCH", "OPTIONS"],
         allowHeaders: ["Content-Type"],
     })
