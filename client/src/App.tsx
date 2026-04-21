@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
-import type { InferResponseType } from "hono";
 import "./App.css";
-import { client } from "./lib/api";
+import {
+  getCurrentProfile,
+  updateMood,
+  type Profile,
+} from "./lib/api";
 
 const emojiOptions = ["😄", "🙂", "😔", "😠", "😴"] as const;
-
-type Profile = InferResponseType<typeof client.current.$get, 200>["profile"];
-type ErrorResponse = { error: string };
-type UpdateMoodSuccessResponse = InferResponseType<typeof client.mood.$patch, 200>;
 
 export default function App() {
   // Defined state variables for profile, mood, moodEmoji, loading, saving, and error
@@ -17,6 +16,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   // Function to load the user profile from the API
   async function loadProfile() {
@@ -24,20 +24,13 @@ export default function App() {
     setError("");
 
     try {
-      const res = await client.current.$get();
+      const data = await getCurrentProfile();
 
-      if (!res.ok) {
-        const data: ErrorResponse = await res.json();
-        setError(data.error);
-        return;
-      }
-
-      const data = await res.json();
       setProfile(data.profile);
       setMood(data.profile.mood ?? "");
       setMoodEmoji((data.profile.moodEmoji ?? "😄") as (typeof emojiOptions)[number]);
-    } catch {
-      setError("Failed to load profile");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load profile");
     } finally {
       setLoading(false);
     }
@@ -47,25 +40,18 @@ export default function App() {
   async function handleSave() {
     setSaving(true);
     setError("");
+    setSuccessMessage("");
 
     try {
-      const res = await client.mood.$patch({
-        json: {
-          mood,
-          moodEmoji,
-        },
+      const data = await updateMood({
+        mood,
+        moodEmoji,
       });
 
-      if (!res.ok) {
-        const data: ErrorResponse = await res.json();
-        setError(data.error);
-        return;
-      }
-
-      const data: UpdateMoodSuccessResponse = await res.json();
       setProfile(data.profile);
-    } catch {
-      setError("Failed to update mood");
+      setSuccessMessage("Mood updated");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to update mood");
     } finally {
       setSaving(false);
     }
@@ -89,7 +75,6 @@ export default function App() {
   return (
     <main className="page">
       <section className="card">
-        {/* <h1 className="title">User Profile</h1> */}
         <div className="profile-header">
           <div className="profile-emoji">
             {profile?.moodEmoji || "🙂"}
@@ -154,75 +139,10 @@ export default function App() {
             {saving ? "Saving..." : "Save mood"}
           </button>
 
-          {error ? <p className="error">{error}</p> : null}
+          {error ? <p className="error-text">{error}</p> : null}
+          {successMessage ? <p className="success-text">{successMessage}</p> : null}
         </div>
       </section>
     </main>
-
-    /*
-    <main className="page">
-      <section className="card">
-        <h1 className="title">User Profile</h1>
-
-        {loading ? (
-          <p>Loading profile...</p>
-        ) : error ? (
-          <p className="error">{error}</p>
-        ) : profile ? (
-          <>
-            <div className="section">
-              <p><strong>Username:</strong> {profile.username}</p>
-              <p><strong>Bio:</strong> {profile.bio ?? "No bio yet"}</p>
-              <p>
-                <strong>Current mood:</strong> {profile.moodEmoji ?? "—"} {profile.mood ?? "No mood set"}
-              </p>
-            </div>
-
-            <div className="section">
-              <label htmlFor="mood" className="label">
-                Update mood:
-              </label>
-              <input
-                id="mood"
-                type="text"
-                value={mood}
-                onChange={(e) => setMood(e.target.value)}
-                placeholder="How are you feeling?"
-                maxLength={50}
-                className="input"
-              />
-            </div>
-
-            <div className="section">
-              <p className="label">Choose emoji</p>
-              <div className="emoji-row">
-                {emojiOptions.map((emoji) => (
-                  <button
-                    key={emoji}
-                    type="button"
-                    onClick={() => setMoodEmoji(emoji)}
-                    className={moodEmoji === emoji ? "emoji-button selected" : "emoji-button"}
-                  >
-                    {emoji}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={handleSave}
-              disabled={saving}
-              className="save-button"
-            >
-              {saving ? "Saving..." : "Save mood"}
-            </button>
-          </>
-        ) : (
-          <p>No profile found.</p>
-        )}
-      </section>
-    </main>
-    */
   );
 }
