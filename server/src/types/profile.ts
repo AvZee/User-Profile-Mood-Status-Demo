@@ -5,4 +5,5 @@ export type Profile = {
     bio: string | null;
     mood: string | null;
     moodEmoji: string | null;
+    updatedAt: Date | null;
 };

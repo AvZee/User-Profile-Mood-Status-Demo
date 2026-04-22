@@ -1,3 +1,5 @@
 import pino from "pino";
 
-export default pino({});
+export const logger = pino({
+    level: "info",
+});

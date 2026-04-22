@@ -71,6 +71,13 @@ export default function App() {
     );
   }
 
+  // Helper function to format the updatedAt date for display
+  function formatUpdatedAt(updatedAt: string | null) {
+    if (!updatedAt) return "Not updated yet";
+
+    return new Date(updatedAt).toLocaleString();
+  }
+
   // Render the profile information, mood update form, and handle loading/error states
   return (
     <main className="page">
@@ -129,6 +136,10 @@ export default function App() {
               </button>
             ))}
           </div>
+
+          <p className="updated-at">
+            Last updated: {formatUpdatedAt(profile?.updatedAt ?? null)}
+          </p>
 
           <button
             type="button"

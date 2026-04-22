@@ -2,7 +2,7 @@ import "dotenv/config";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import profileRoutes from "./routes/profileRoutes";
-import logger from "./logger";
+import { logger } from "./logger";
 
 const app = new Hono();
 const port = Number(process.env.PORT|| 3000);
@@ -28,4 +28,4 @@ Bun.serve({
     port,
 });
 
-logger.info(`Server running on port ${port}`);
+logger.info({ port }, "Server starting");

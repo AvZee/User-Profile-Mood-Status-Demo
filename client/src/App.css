@@ -144,6 +144,12 @@ body {
   box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.35);
 }
 
+.updated-at {
+  margin: 10px 0 0;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
 .save-button {
   margin-top: 6px;
   padding: 14px 16px;
