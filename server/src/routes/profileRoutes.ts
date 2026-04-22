@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { updateProfileMoodSchema } from "../validation/profileSchemas";
-import { getUserProfile, updateUserMood } from "../services/profileService";
+import { getUserProfile, getUserMoodHistory, updateUser } from "../services/profileService";
 
 const profileRoutes = new Hono()
     .get("/current", async (c) => {
@@ -15,6 +15,12 @@ const profileRoutes = new Hono()
 
         return c.json({ profile: userProfile }, 200);
     })
+    .get("/history", async (c) => {
+        const profileId = 1; // mock user id
+        const history = await getUserMoodHistory(profileId);
+
+        return c.json({ history }, 200);
+    })
     .patch(
         "/mood",
         zValidator("json", updateProfileMoodSchema),
@@ -22,7 +28,7 @@ const profileRoutes = new Hono()
             const profileId = 1; // mock user id
             const updates = c.req.valid("json");
 
-            const updatedProfile = await updateUserMood(profileId, updates);
+            const updatedProfile = await updateUser(profileId, updates);
 
             if (!updatedProfile) {
                 return c.json({ error: "Profile not found" }, 404);

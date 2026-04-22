@@ -11,12 +11,24 @@ export type Profile = {
     updatedAt: string | null;
 };
 
+export type MoodHistoryEntry = {
+    id: number;
+    profileId: number;
+    mood: string;
+    moodEmoji: string;
+    createdAt: string | null;
+};
+
 export type ErrorResponse = {
     error: string;
 };
 
 export type ProfileResponse = {
     profile: Profile;
+};
+
+export type MoodHistoryResponse = {
+    history: MoodHistoryEntry[];
 };
 
 export type UpdateMoodSuccessResponse = {
@@ -28,12 +40,22 @@ export async function getCurrentProfile() {
     const res = await fetch(`${baseUrl}/current`);
 
     if (!res.ok) {
-        const data: ErrorResponse = await res.json();
-        throw new Error(data.error || "Failed to load profile");
+        const text = await res.text();
+        throw new Error(text || "Failed to load profile");
     }
 
-    const data: ProfileResponse = await res.json();
-    return data;
+    return res.json();
+}
+
+export async function getMoodHistory() {
+    const res = await fetch(`${baseUrl}/history`);
+
+    if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "Failed to load mood history");
+    }
+
+    return res.json();
 }
 
 export async function updateMood(payload: {
@@ -49,10 +71,9 @@ export async function updateMood(payload: {
     });
 
     if (!res.ok) {
-        const data: ErrorResponse = await res.json();
-        throw new Error(data.error || "Failed to update mood");
+        const text = await res.text();
+        throw new Error(text || "Failed to update mood");
     }
     
-    const data: UpdateMoodSuccessResponse = await res.json();
-    return data;
+    return res.json();
 }

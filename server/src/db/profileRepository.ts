@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { db } from "./client";
-import { profiles } from "./schema";
+import { profiles, moodHistory } from "./schema";
 import type { Profile } from "../types/profile";
 import type { UpdateProfileMoodInput } from "../validation/profileSchemas";
 
@@ -16,7 +16,7 @@ function mapProfileRow(row: typeof profiles.$inferSelect): Profile {
     };
 }
 
-// Database access functions for profiles
+// Function to get a profile by ID
 export async function getProfileById(profileId: number): Promise<Profile | null> {
     const rows = await db
         .select()
@@ -45,4 +45,24 @@ export async function updateProfileMoodById(
 
     const row = rows[0];
     return row ? mapProfileRow(row) : null;
+}
+
+// Function to get the mood history for a profile
+export async function getMoodHistoryByProfileId(profileId: number) {
+    return db
+        .select()
+        .from(moodHistory)
+        .where(eq(moodHistory.profileId, profileId))
+        .orderBy(desc(moodHistory.createdAt))
+        .limit(5);
+}
+
+// Function to create a new mood history entry for a profile
+export async function createMoodHistoryEntry(profileId: number, updates: UpdateProfileMoodInput) {
+    await db.insert(moodHistory).values({
+        profileId,
+        mood: updates.mood,
+        moodEmoji: updates.moodEmoji,
+        createdAt: new Date(),
+    });
 }

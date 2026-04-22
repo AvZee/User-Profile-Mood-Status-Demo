@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import {
   getCurrentProfile,
+  getMoodHistory,
   updateMood,
   type Profile,
+  type MoodHistoryEntry,
 } from "./lib/api";
 
 const emojiOptions = ["😄", "🙂", "😔", "😠", "😴"] as const;
@@ -13,6 +15,7 @@ export default function App() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [mood, setMood] = useState("");
   const [moodEmoji, setMoodEmoji] = useState<(typeof emojiOptions)[number]>("😄");
+  const [history, setHistory] = useState<MoodHistoryEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -36,19 +39,33 @@ export default function App() {
     }
   }
 
-  // Function to handle saving the updated mood to the API
+  // Function to load the user's mood history from the API
+  async function loadHistory() {
+    setLoading(true);
+    setError("");
+    
+    try {
+      const data = await getMoodHistory();
+      
+      setHistory(data.history);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load mood history");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Function to handle saving the updated mood to the API 
+  // and loading new profile and mood history data
   async function handleSave() {
     setSaving(true);
     setError("");
     setSuccessMessage("");
 
     try {
-      const data = await updateMood({
-        mood,
-        moodEmoji,
-      });
+      await updateMood({ mood, moodEmoji });
+      await Promise.all([loadProfile(), loadHistory()]);
 
-      setProfile(data.profile);
       setSuccessMessage("Mood updated");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to update mood");
@@ -59,6 +76,10 @@ export default function App() {
 
   useEffect(() => {
     loadProfile();
+  }, []);
+
+  useEffect(() => {
+    loadHistory();
   }, []);
 
   if (loading) {
@@ -78,7 +99,7 @@ export default function App() {
     return new Date(updatedAt).toLocaleString();
   }
 
-  // Render the profile information, mood update form, and handle loading/error states
+  // Render the profile information, mood update form, mood history list, and handle loading/error states
   return (
     <main className="page">
       <section className="card">
@@ -135,6 +156,27 @@ export default function App() {
                 {emoji}
               </button>
             ))}
+          </div>
+
+          <div className="history-section">
+            <h2 className="history-title">Recent Mood History</h2>
+            
+            {history.length === 0 ? (
+              <p className="status-text">No history yet</p>
+            ) : (
+              history.map((entry) => (
+                <div key={entry.id} className="history-item">
+                  <div className="history-main">
+                    <span>{entry.moodEmoji}</span>
+                    <span>{entry.mood}</span>
+                  </div>
+
+                  <span className="history-time">
+                    {formatUpdatedAt(entry.createdAt)}
+                  </span>
+                </div>
+              ))
+            )}
           </div>
 
           <p className="updated-at">
