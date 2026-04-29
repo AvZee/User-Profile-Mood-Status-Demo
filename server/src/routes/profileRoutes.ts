@@ -16,7 +16,7 @@ const profileRoutes = new Hono()
         return c.json({ profile: userProfile }, 200);
     })
     .get("/history", async (c) => {
-        const profileId = 1; // mock user id
+        const profileId = 1;
         const history = await getUserMoodHistory(profileId);
 
         return c.json({ history }, 200);
@@ -25,7 +25,7 @@ const profileRoutes = new Hono()
         "/mood",
         zValidator("json", updateProfileMoodSchema),
         async (c) => {
-            const profileId = 1; // mock user id
+            const profileId = 1;
             const updates = c.req.valid("json");
 
             const updatedProfile = await updateUser(profileId, updates);

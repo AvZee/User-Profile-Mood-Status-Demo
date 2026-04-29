@@ -1,6 +1,5 @@
 import { pgTable, serial, text, timestamp, integer } from "drizzle-orm/pg-core";
 
-// Define database schema using Drizzle ORM (profiles and mood_history tables)
 export const profiles = pgTable("profiles", {
     id: serial("id").primaryKey(),
     username: text("username").notNull().unique(),

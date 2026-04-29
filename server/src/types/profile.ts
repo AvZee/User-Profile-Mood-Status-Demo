@@ -1,4 +1,3 @@
-// Profile type for backend
 export type Profile = {
     id: number;
     username: string;

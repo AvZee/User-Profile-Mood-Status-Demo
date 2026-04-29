@@ -2,8 +2,6 @@ import type { UpdateProfileMoodInput } from "../validation/profileSchemas";
 import { getProfileById, updateProfileMoodById, createMoodHistoryEntry, getMoodHistoryByProfileId } from "../db/profileRepository";
 import type { Profile } from "../types/profile";
 
-// Service functions for profile-related operations
-
 export async function getUserProfile(profileId: number): Promise<Profile | null> {
     return getProfileById(profileId);
 }

@@ -1,7 +1,5 @@
 const baseUrl = `${import.meta.env.VITE_API_URL}/api/profile`;
 
-// Type definitions for profile data and API responses
-
 export type Profile = {
     id: number;
     username: string;

@@ -4,12 +4,12 @@ A modern full-stack demo of a user profile with an interactive mood status and h
 
 ## Tech Stack
 
-- React (Vite)
-- Hono (API)
+- React - Vite
+- Bun - Runtime
+- Hono - API
 - Drizzle ORM
-- PostgreSQL
-- Zod validation
-- Bun runtime
+- PostgreSQL - Database
+- Zod - Validation
 
 ## Live Demo
 
@@ -34,13 +34,13 @@ cd User-Profile-Mood-Status-Demo
 
 ## 2. Install Dependencies
 
-Backend
+Backend:
 ```
 cd server
 bun install
 ```
 
-Frontend
+Frontend:
 ```
 cd ../client
 bun install
@@ -48,13 +48,13 @@ bun install
 
 ## 3. Set Environment Variables
 
-Backend (```server/.env```)
+Backend (```server/.env```):
 ```
 DATABASE_URL=postgresql://username:password@host:port/database
 PORT=3000
 ```
 
-Frontend (```client/.env```)
+Frontend (```client/.env```):
 ```
 VITE_API_URL=http://localhost:3000
 ```
@@ -64,19 +64,20 @@ Note: `.env` files are not committed for security reasons.
 
 ## 4. Run the App
 
-Backend
+Backend:
 ```
 cd server
 bun run dev
 ```
 
-Frontend
+Frontend:
 ```
 cd ../client
 bun run dev
 ```
 
 # Notes
+
 - The frontend communicates with the backend via a REST API
 - The backend uses Drizzle ORM for type-safe database queries
 - App designed as a full-stack architecture exercise focusing on data flow between layers

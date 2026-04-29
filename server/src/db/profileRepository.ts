@@ -16,7 +16,6 @@ function mapProfileRow(row: typeof profiles.$inferSelect): Profile {
     };
 }
 
-// Function to get a profile by ID
 export async function getProfileById(profileId: number): Promise<Profile | null> {
     const rows = await db
         .select()
@@ -28,7 +27,6 @@ export async function getProfileById(profileId: number): Promise<Profile | null>
     return row ? mapProfileRow(row) : null;
 }
 
-// Function to update the mood and moodEmoji of a profile by ID
 export async function updateProfileMoodById(
     profileId: number,
     updates: UpdateProfileMoodInput
@@ -47,7 +45,6 @@ export async function updateProfileMoodById(
     return row ? mapProfileRow(row) : null;
 }
 
-// Function to get the mood history for a profile
 export async function getMoodHistoryByProfileId(profileId: number) {
     return db
         .select()
@@ -57,7 +54,6 @@ export async function getMoodHistoryByProfileId(profileId: number) {
         .limit(5);
 }
 
-// Function to create a new mood history entry for a profile
 export async function createMoodHistoryEntry(profileId: number, updates: UpdateProfileMoodInput) {
     await db.insert(moodHistory).values({
         profileId,

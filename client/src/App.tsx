@@ -11,7 +11,6 @@ import {
 const emojiOptions = ["😄", "🙂", "😔", "😠", "😴"] as const;
 
 export default function App() {
-  // Defined state variables for profile, mood, moodEmoji, loading, saving, and error
   const [profile, setProfile] = useState<Profile | null>(null);
   const [mood, setMood] = useState("");
   const [moodEmoji, setMoodEmoji] = useState<(typeof emojiOptions)[number]>("😄");
@@ -21,7 +20,6 @@ export default function App() {
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  // Function to load the user profile from the API
   async function loadProfile() {
     setLoading(true);
     setError("");
@@ -39,7 +37,6 @@ export default function App() {
     }
   }
 
-  // Function to load the user's mood history from the API
   async function loadHistory() {
     setLoading(true);
     setError("");
@@ -92,14 +89,12 @@ export default function App() {
     );
   }
 
-  // Helper function to format the updatedAt date for display
   function formatUpdatedAt(updatedAt: string | null) {
     if (!updatedAt) return "Not updated yet";
 
     return new Date(updatedAt).toLocaleString();
   }
 
-  // Render the profile information, mood update form, mood history list, and handle loading/error states
   return (
     <main className="page">
       <section className="card">
