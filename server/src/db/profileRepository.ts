@@ -4,7 +4,6 @@ import { profiles, moodHistory } from "./schema";
 import type { Profile } from "../types/profile";
 import type { UpdateProfileMoodInput } from "../validation/profileSchemas";
 
-// Helper function to map database row to Profile type
 function mapProfileRow(row: typeof profiles.$inferSelect): Profile {
     return {
         id: row.id,

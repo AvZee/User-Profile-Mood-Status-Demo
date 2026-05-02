@@ -44,5 +44,5 @@ const profileRoutes = new Hono()
         }
     );
 
-export default profileRoutes;
+export { profileRoutes };
 export type ProfileRoutesType = typeof profileRoutes;
